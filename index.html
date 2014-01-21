@@ -29,21 +29,48 @@
         <script src="js/units.js"></script>
         <script src="js/main.js"></script>
         
+        
+        <!-- GAME UI -->
+        
         <div id="game-container">
-            <div id="resources">
-                <div id="gold" class="resource">
-                    <span class="resource-name">Kulta: </span><span class="resource-amount">0</span> (<span class="resource-income"></span>) 
+            <div id="sidebar">
+                
+                <div id="time" class="sidebar-section time-section">
+                    <span class="personnel-name">Lukukausi:</span><span class="personnel-amount" id="year">0</span>
                 </div>
-                <div id="local" class="resource">
-                    <span class="resource-name">Tutkimus: </span><span class="resource-amount">0</span> (<span class="resource-income"></span>) 
+                
+                <div id="resources" class="sidebar-section resource-section">
+                    <div id="gold" class="resource">
+                        <span class="resource-name">Kulta: </span><span class="resource-amount">0</span> <span class="resource-income">0</span>
+                    </div>
+                    <div id="local" class="resource">
+                        <span class="resource-name">Tutkimus: </span><span class="resource-amount">0</span> <span class="resource-income">0</span>
+                    </div>
+                    <div id="inter" class="resource">
+                        <span class="resource-name">Kv-tutkimus: </span><span class="resource-amount">0</span> <span class="resource-income">0</span>
+                    </div>
                 </div>
-                <div id="inter" class="resource">
-                    <span class="resource-name">Kv-tutkimus: </span><span class="resource-amount">0</span> (<span class="resource-income"></span>) 
+                
+                <div id="personnel" class="sidebar-section resource-section">
+                    <div id="staff">
+                        <span class="personnel-name">Henkilökuntaa: </span><span class="personnel-amount">0</span>
+                    </div>
+                    <div id="students">
+                        <span class="personnel-name">Opiskelijoita: </span><span class="personnel-amount">0</span>
+                    </div>
+                
                 </div>
-            </div>
+            </div><!-- sidebar end -->
             
-            <canvas id="main-canvas" width="500" height="400">Your browser does not support the HTML5 canvas.</canvas>
+            
+            
+            
+            <div id="canvas-container">
+                <canvas id="main-canvas" width="800" height="600">Your browser does not support the HTML5 canvas.</canvas>
+            </div>
         </div>
+        
+        <!-- GAME UI END -->
         
         <script>
             $(document).ready(function() {

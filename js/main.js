@@ -16,13 +16,18 @@
  */
 function Logic () {
     
-    var resources = new Resources(5, 0, 2);
+    var resources = new Resources(100, 0, 0);
     var resourceIncome = new Resources(0, 0, 0);
     
-    var units = [new Unit(0.2, 0.1, 0.1)];
+    var staff = [new Unit(0,0,0)];
+    var students = [new Unit(0,0,0)];
     
-    this.getUnitCount = function() {
-        return units.length;  
+    this.getStaffCount = function() {
+        return staff.length;  
+    };
+    
+    this.getStudentCount = function() {
+        return students.length;
     };
     
     this.getResource = function(resource) {
@@ -35,16 +40,16 @@ function Logic () {
     
     this._countUpkeep = function() {
         var upkeep = new Resources();
-        for (var i = 0; i < units.length; i++) {
-            upkeep = upkeep.add(units[i].getUpkeep());
+        for (var i = 0; i < staff.length; i++) {
+            upkeep = upkeep.add(staff[i].getUpkeep());
         }
         return upkeep;
     };
     
     this._countIncome = function() {
         var income = new Resources();
-        for (var i = 0; i < units.length; i++) {
-            income = income.add(units[i].getIncome());
+        for (var i = 0; i < staff.length; i++) {
+            income = income.add(staff[i].getIncome());
         }
         return income;
     };
@@ -89,9 +94,12 @@ function Game () {
        $("#local .resource-amount").text(this.logic.getResource("local").toFixed(0));
        $("#inter .resource-amount").text(this.logic.getResource("inter").toFixed(0));
        
-       $("#gold .resource-income").text(this.logic.getIncome("gold").toFixed(1));
-       $("#local .resource-income").text(this.logic.getIncome("local").toFixed(1));
-       $("#inter .resource-income").text(this.logic.getIncome("inter").toFixed(1));             
+       $("#gold .resource-income").text("(" + this.logic.getIncome("gold").toFixed(1) + ")");
+       $("#local .resource-income").text("(" + this.logic.getIncome("local").toFixed(1) + ")");
+       $("#inter .resource-income").text("(" + this.logic.getIncome("inter").toFixed(1) + ")");             
+       
+       $("#staff .personnel-amount").text(this.logic.getStaffCount());
+       $("#students .personnel-amount").text(this.logic.getStudentCount());
     };
     
     

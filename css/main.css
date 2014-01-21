@@ -92,13 +92,73 @@ textarea {
    ========================================================================== */
 
 body {
-    background: #888;
+    font-family: "Hammersmith One", sans-serif;
+    background: #8EC0CC;
 }
 
 #game-container {
-    width: 600px;
+    width:1200px;
     margin: auto;
 }
+
+#sidebar {
+    width: 12.6em;
+    float: left;
+    overflow: auto;
+}
+
+.sidebar-section {
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    width: 90%;
+    margin: 3% 0;
+    padding: 5%;
+    overflow: auto;   
+    border-bottom: #112617 solid 2px;
+}
+
+.resource-section {
+    background: #42B761;
+}
+
+.time-section {
+    background: #BCCFD3;
+}
+
+.resource {
+    width: 100%;
+    overflow: auto;
+    /*background: #4E9362;
+    margin-bottom:0.1em;*/
+    /*border-bottom: #112617 solid 1px;*/
+}
+.resource-name, .resource-amount, .resource-income, .personnel-amount, .personnel-name {
+    float: left;
+    height: 1.5em;
+}
+.resource-name {
+    width: 45%;
+}
+.personnel-name {
+    width: 65%;
+}
+.resource-amount, .personnel-amount {
+    width: 30%;
+    /*background: #4E9362;*/
+    text-align: center;
+}
+.resource-income {
+    width: 10%;
+    text-align: center;
+}
+
+#canvas-container {
+    float:left;
+}
+#main-canvas {
+    background: #E5E5E5;
+}
+
 
 
 
