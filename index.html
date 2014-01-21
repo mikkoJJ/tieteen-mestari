@@ -9,6 +9,8 @@
 
         <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
 
+        <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+        
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.7.1.min.js"></script>
@@ -24,6 +26,7 @@
         
         <!-- local libraries: -->
         <script src="js/plugins.js"></script>
+        <script src="js/units.js"></script>
         <script src="js/main.js"></script>
         
         <div id="canvas-container">
@@ -32,7 +35,7 @@
         
         <script>
             $(document).ready(function() {
-                TiedeUI.setup("main-canvas");    
+                TiedeGame.start("main-canvas");    
             });
         </script>
 
