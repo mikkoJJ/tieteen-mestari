@@ -76,58 +76,22 @@ function Game () {
         this.stage = new createjs.Stage(canvasID);
         this.logic = new Logic();
         
-        this.setupUI();
         createjs.Ticker.addEventListener("tick", this.update.bind(this));
     };
     
     
-    this.setupUI = function() {
-        var rowHeight = 20;
-        var valueOffset = 120;
-        var incomeOffset = 40;
-        var font = "16px Hammersmith One";
-        var box = new createjs.Container(); 
-        box.x = 5;
-        box.y = 5;
-        
-        var goldLabel = new createjs.Text("Kulta", font, "black");
-        var gold = new createjs.Text("0", font, "black");
-        var goldIncome = new createjs.Text("0", font, "black");
-        gold.x = valueOffset;
-        goldIncome.x = gold.x + incomeOffset;
-        
-        var localLabel = new createjs.Text("Tutkimus", font, "black");
-        localLabel.y = rowHeight;
-        var local = new createjs.Text("0", font, "black");
-        var localIncome = new createjs.Text("0", font, "black");
-        local.y = localLabel.y;
-        local.x = valueOffset;
-        localIncome.y = local.y; localIncome.x = local.x + incomeOffset;
-        
-        var interLabel = new createjs.Text("KV-tutkimus", font, "black");
-        interLabel.y = rowHeight * 2;
-        var inter = new createjs.Text("0", font, "black");
-        var interIncome = new createjs.Text("0", font, "black");
-        inter.y = interLabel.y;
-        inter.x = valueOffset;
-        interIncome.y = inter.y; interIncome.x = inter.x + incomeOffset;
-        
-        box.addChild(goldLabel, localLabel, interLabel, gold, local, inter, goldIncome, localIncome, interIncome);
-        valueFields.gold = gold; valueFields.local = local; valueFields.inter = inter;
-        valueFields.goldIncome = goldIncome; valueFields.localIncome = localIncome; valueFields.interIncome = interIncome;
-        
-        this.stage.addChild(box);
-    };  
-    
-    
+    /**
+     * Updates the UI according to the state of the Logic, ie. changes values
+     * in the HTML page for the user to see. 
+     */
     this.updateValues = function() {
-        valueFields.gold.text = this.logic.getResource("gold").toFixed(0);
-        valueFields.local.text = this.logic.getResource("local").toFixed(0);
-        valueFields.inter.text = this.logic.getResource("inter").toFixed(0);
-        
-        valueFields.goldIncome.text = "(" + this.logic.getIncome("gold").toFixed(1) + ")";
-        valueFields.localIncome.text = "(" + this.logic.getIncome("local").toFixed(1) + ")";
-        valueFields.interIncome.text = "(" + this.logic.getIncome("inter").toFixed(1) + ")";             
+       $("#gold .resource-amount").text(this.logic.getResource("gold").toFixed(0));
+       $("#local .resource-amount").text(this.logic.getResource("local").toFixed(0));
+       $("#inter .resource-amount").text(this.logic.getResource("inter").toFixed(0));
+       
+       $("#gold .resource-income").text(this.logic.getIncome("gold").toFixed(1));
+       $("#local .resource-income").text(this.logic.getIncome("local").toFixed(1));
+       $("#inter .resource-income").text(this.logic.getIncome("inter").toFixed(1));             
     };
     
     

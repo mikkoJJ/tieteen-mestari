@@ -29,7 +29,19 @@
         <script src="js/units.js"></script>
         <script src="js/main.js"></script>
         
-        <div id="canvas-container">
+        <div id="game-container">
+            <div id="resources">
+                <div id="gold" class="resource">
+                    <span class="resource-name">Kulta: </span><span class="resource-amount">0</span> (<span class="resource-income"></span>) 
+                </div>
+                <div id="local" class="resource">
+                    <span class="resource-name">Tutkimus: </span><span class="resource-amount">0</span> (<span class="resource-income"></span>) 
+                </div>
+                <div id="inter" class="resource">
+                    <span class="resource-name">Kv-tutkimus: </span><span class="resource-amount">0</span> (<span class="resource-income"></span>) 
+                </div>
+            </div>
+            
             <canvas id="main-canvas" width="500" height="400">Your browser does not support the HTML5 canvas.</canvas>
         </div>
         
