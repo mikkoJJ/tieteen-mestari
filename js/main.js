@@ -18,9 +18,8 @@ function Logic () {
     
     var resources = new Resources(100, 0, 0);
     var resourceIncome = new Resources(0, 0, 0);
-    
     var staff = [new Unit(0,0,0)];
-    var students = [new Unit(0,0,0)];
+    var students = [new Student(), new Student()];
     
     this.getStaffCount = function() {
         return staff.length;  
@@ -38,6 +37,11 @@ function Logic () {
         return resourceIncome[resource];
     };
     
+    
+    /** 
+     * Counts the upkeep of all staff within the
+     * university. 
+     */
     this._countUpkeep = function() {
         var upkeep = new Resources();
         for (var i = 0; i < staff.length; i++) {
@@ -46,6 +50,11 @@ function Logic () {
         return upkeep;
     };
     
+    
+    /**
+     * Counts the income for different resources for the 
+     * whole university. 
+     */
     this._countIncome = function() {
         var income = new Resources();
         for (var i = 0; i < staff.length; i++) {
@@ -54,12 +63,33 @@ function Logic () {
         return income;
     };
     
+    /**
+     * Progresses studies for all studens in the
+     * university. 
+     */
+    this._progressStudies = function() {
+        for (var i = 0; i < students.length; i++) {
+            students[i].study();
+            
+            if(students[i].canGraduate()) {
+                students.splice(i, 1);
+                console.log("graduated");
+            }     
+        }  
+    };
+    
+    /**
+     * Progresses the university logic state one tick
+     * forward. Income and study progress is updated.
+     */
     this.update = function() {
         var upkeep = this._countUpkeep();
         var income = this._countIncome();
         
         resourceIncome = income.subtract(upkeep);
         resources = resources.add(resourceIncome);
+        
+        this._progressStudies();
     };
 }
 
@@ -81,6 +111,8 @@ function Game () {
         this.stage = new createjs.Stage(canvasID);
         this.logic = new Logic();
         
+        createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+        createjs.Ticker.setFPS(1);
         createjs.Ticker.addEventListener("tick", this.update.bind(this));
     };
     

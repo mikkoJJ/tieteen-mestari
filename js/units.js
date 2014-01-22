@@ -92,3 +92,41 @@ function Unit (baseGold, baseInternational, baseLocal) {
         return baseIncome;  
     };
 }
+
+
+/**
+ * Enters the university and tries to graduate. 
+ */
+function Student () {
+    
+    //when progress gets to 1, the student graduates
+    this._progress = 0.0;
+    
+    this._morale = Math.random() * (1.0 - 0.01) + 0.01;
+    
+    
+    /**
+     * Try to progress studies, success based on morale. 
+     */
+    this.study = function() {
+        var baseProgress = 0.1;
+        this._progress += baseProgress * this._morale;
+        console.log(this); 
+    };
+    
+    /**
+     *  
+     */
+    this.canGraduate = function() {
+        return this._progress >= 1.0;
+    };
+    
+    /**
+     * Gets the progress of studies for this student.
+     * @return {float} number between 0 and 1 representing the progress of studies to graduation 
+     */
+    this.getProgress = function() {
+        return this._progress;
+    };
+    
+}
