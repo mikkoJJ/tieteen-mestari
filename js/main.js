@@ -7,93 +7,10 @@
  * An HTML5 game about the Finnish University system. I'm maybe trying to
  * understand something about it. 
  * 
- * This is the main code file containging the game logic and UI.
+ * This is the main code file containging the main controller component,
+ * the "interface" between the HTML UI and the game logic.
  *======================================================================*/
 (function (window, $) {
-
-/**
- * Keeps track and updates the game state. 
- */
-function Logic () {
-    
-    var resources = new Resources(100, 0, 0);
-    var resourceIncome = new Resources(0, 0, 0);
-    var staff = [new Unit(0,0,0)];
-    var students = [new Student(), new Student()];
-    
-    this.getStaffCount = function() {
-        return staff.length;  
-    };
-    
-    this.getStudentCount = function() {
-        return students.length;
-    };
-    
-    this.getResource = function(resource) {
-        return resources[resource];
-    };
-    
-    this.getIncome = function(resource) {
-        return resourceIncome[resource];
-    };
-    
-    
-    /** 
-     * Counts the upkeep of all staff within the
-     * university. 
-     */
-    this._countUpkeep = function() {
-        var upkeep = new Resources();
-        for (var i = 0; i < staff.length; i++) {
-            upkeep = upkeep.add(staff[i].getUpkeep());
-        }
-        return upkeep;
-    };
-    
-    
-    /**
-     * Counts the income for different resources for the 
-     * whole university. 
-     */
-    this._countIncome = function() {
-        var income = new Resources();
-        for (var i = 0; i < staff.length; i++) {
-            income = income.add(staff[i].getIncome());
-        }
-        return income;
-    };
-    
-    /**
-     * Progresses studies for all studens in the
-     * university. 
-     */
-    this._progressStudies = function() {
-        for (var i = 0; i < students.length; i++) {
-            students[i].study();
-            
-            if(students[i].canGraduate()) {
-                students.splice(i, 1);
-                console.log("graduated");
-            }     
-        }  
-    };
-    
-    /**
-     * Progresses the university logic state one tick
-     * forward. Income and study progress is updated.
-     */
-    this.update = function() {
-        var upkeep = this._countUpkeep();
-        var income = this._countIncome();
-        
-        resourceIncome = income.subtract(upkeep);
-        resources = resources.add(resourceIncome);
-        
-        this._progressStudies();
-    };
-}
-
-
 
 /**
  * Contains the interface between the HTML page (and the player) and the game logic.
@@ -103,17 +20,27 @@ function Game () {
     
     var valueFields = {};
     
+    this._lastTime = 0;
+    
     /**
      * Sets up the game UI with EaselJS 
      * @param {String} canvasID the ID name of the canvas on the page to use
      */
     this.start = function(canvasID) {
         this.stage = new createjs.Stage(canvasID);
-        this.logic = new Logic();
+        this.logic = new TiedeLogic();
         
         createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-        createjs.Ticker.setFPS(1);
+        createjs.Ticker.setFPS(30);
         createjs.Ticker.addEventListener("tick", this.update.bind(this));
+        
+        this.logic.addEventListener("graduated", this.removeStudent.bind(this));
+        this.logic.addEventListener("newStudent", this.drawStudent.bind(this));
+        
+        this.logic.addStudent(new Student());
+        this.logic.addStudent(new Student());
+        this.logic.addStudent(new Student());
+        this.logic.addStudent(new Student());
     };
     
     
@@ -135,17 +62,37 @@ function Game () {
     };
     
     
+    this.drawStudent = function(student) {
+        var sprite = new createjs.Bitmap("img/opiskelija.png");
+        sprite.x = this.logic.getStudentCount() * (60 + 10);
+        sprite.scaleX = 0.5;
+        sprite.scaleY = 0.5;
+        
+        student.sprite = sprite;
+        
+        this.stage.addChild(sprite);
+    };
+    
+    this.removeStudent = function(student) {
+        this.stage.removeChild(student.sprite);     
+            
+    };
+    
+    
     /**
      * Progress the game state, then redraw the canvas. 
      */
     this.update = function() {
-        this.logic.update();
+        var time = createjs.Ticker.getTime();
+        var deltaTime = (time - this._lastTime) / 1000;
+        this._lastTime = time;
+        
+        this.logic.update(deltaTime);
         this.updateValues();
         this.stage.update();
     };
   
 };
-
 
 window.TiedeGame = new Game();
 

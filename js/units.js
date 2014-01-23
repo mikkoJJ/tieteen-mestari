@@ -100,18 +100,15 @@ function Unit (baseGold, baseInternational, baseLocal) {
 function Student () {
     
     //when progress gets to 1, the student graduates
+    this._baseProgress = 0.1;
     this._progress = 0.0;
-    
     this._morale = Math.random() * (1.0 - 0.01) + 0.01;
-    
     
     /**
      * Try to progress studies, success based on morale. 
      */
-    this.study = function() {
-        var baseProgress = 0.1;
-        this._progress += baseProgress * this._morale;
-        console.log(this); 
+    this.study = function(deltaTime) {
+        this._progress += this._baseProgress * this._morale * deltaTime; 
     };
     
     /**
