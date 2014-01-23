@@ -15,6 +15,11 @@
 /**
  * The object that keeps track of the game state, such as
  * resources and units. 
+ * 
+ * Exposes the following events for controllers to bind to:
+ *  - newStudent
+ *  - newStaff
+ *  - graduated
  */
 function TiedeLogic () {
     
