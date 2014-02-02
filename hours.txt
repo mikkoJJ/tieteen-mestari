@@ -6,3 +6,6 @@ grafiikka 1
 koodaus 10
 
 === VKO 2:
+suunnittelu 4
+grafiikka 0
+koodaus 4 + 4 + 2

@@ -72,58 +72,115 @@ function Resources (gold, international, localpapers) {
     };
 }
 
+
+//============================================================================ UNIT
+
 /**
  * A game unit that can be hired to the university.
- * Affects upkeep and income of resources in different ways. 
+ * Affects upkeep and income of resources in different ways.
+ * @class Unit 
  */
-function Unit (baseGold, baseInternational, baseLocal) {
-    
-    var baseUpkeep = new Resources(baseGold, baseInternational, baseLocal);
-    var baseIncome = new Resources();
-    
-    /**
-     * @return {Object} the upkeep cost of different resources for this unit.
-     */
-    this.getUpkeep = function() {
-        return baseUpkeep;
-    };
-    
-    this.getIncome = function() {
-        return baseIncome;  
-    };
-}
-
+var Unit = function() {
+    this.initialize();
+};
 
 /**
- * Enters the university and tries to graduate. 
+ * Initialize the Unit with default values. 
  */
-function Student () {
-    
-    //when progress gets to 1, the student graduates
+Unit.prototype.initialize = function() {
+    this._baseUpkeep = 0;
     this._baseProgress = 0.1;
     this._progress = 0.0;
-    this._morale = Math.random() * (1.0 - 0.01) + 0.01;
+    this._yieldType = "undefined";
+    this._yieldAmount = 1;
+    this._continuous = true;
+    this._morale = Math.random() * (1.0 - 0.1) + 0.1;
+};
+
+/**
+ * @return {Object} the upkeep cost in gold for this unit.
+ */
+Unit.prototype.getUpkeep = function() {
+    return this._baseUpkeep;
+};
+
+/**
+ * Gets the progress of studies for this student.
+ * @return {float} number between 0 and 1 representing the progress of studies to graduation 
+ */
+Unit.prototype.getProgress = function() {
+    return this._progress;
+};
+
+/**
+ * Updates the unit's progress in doing the thing it's doing 
+ * @param {Object} deltaTime current time in seconds between updates
+ */
+Unit.prototype.update = function(deltaTime) {
+    this._progress += this._baseProgress * this._morale * deltaTime; 
+};
+
+/**
+ * @return {Boolean} true if the progress of this unit is done.
+ */
+Unit.prototype.isDone = function() {
+    return this._progress >= 1.0;
+};
+
+/**
+ * Restarts this unit's progress. 
+ */
+Unit.prototype.restart = function() {
+    this._progress = 0.0;  
+};
+
+/**
+ * @return {Object} an object containing the resource type and amount this unit yields. 
+ */
+Unit.prototype.yield = function() {
+    return {type: this._yieldType, amount: this._yieldAmount};  
+};
+
+/**
+ * @return {Boolean} true if this unit is set to continuous mode, ie. it doesn't disappear
+ * after it yields. 
+ */
+Unit.prototype.isContinuous = function() {
+    return this._continuous;
+};
+
+/**
+ * @return {Boolean} true if this unit is a student and not staff. 
+ */
+Unit.prototype.isStudent = function() {
+    return this._yieldType == "graduates";
+};
+
+//============================================================================================= STUDENT
+
+var Student = function() {
+    this.initialize();
     
-    /**
-     * Try to progress studies, success based on morale. 
-     */
-    this.study = function(deltaTime) {
-        this._progress += this._baseProgress * this._morale * deltaTime; 
-    };
+    this._yieldType = "graduates";
+    this._continuous = false;
+    this.sprite = "opiskelija.png";
+};
+
+Student.prototype = new Unit();
+
+
+//============================================================================================= STAFF
+
+var Researcher = function() {
+    this.initialize();
     
-    /**
-     *  
-     */
-    this.canGraduate = function() {
-        return this._progress >= 1.0;
-    };
-    
-    /**
-     * Gets the progress of studies for this student.
-     * @return {float} number between 0 and 1 representing the progress of studies to graduation 
-     */
-    this.getProgress = function() {
-        return this._progress;
-    };
-    
-}
+    this._baseUpkeep = 1;
+    this._yieldType = "research";
+    this.sprite = "tutkija.png";
+};
+
+Staff.prototype = new Unit();
+
+Staff.prototype.beginResearch = function() {
+    this._progress = 0;  
+};

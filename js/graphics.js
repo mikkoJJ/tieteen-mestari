@@ -81,6 +81,8 @@ ProgressBar.prototype._ticky = function(e) {
     var source = this._source;
     var bounds = bar.getBounds();
     
+    bar.graphics.clear();
+    
     bar.graphics.beginFill(OPTIONS.progressBar.color).drawRoundRect(
         0, 
         0, 
@@ -121,8 +123,6 @@ Character.prototype.initialize = function(source, spritePath) {
     var spriteWidth = sprite.getTransformedBounds().width;
     var spriteHeight = sprite.getTransformedBounds().height;
     
-    //sprite.regX = spriteWidth / 2;
-    //sprite.regY = spriteHeight / 2;
     sprite.x = sprite.regX;
     sprite.y = sprite.regY + OPTIONS.progressBar.height + OPTIONS.progressBar.margin;
    
@@ -141,8 +141,6 @@ Character.prototype.initialize = function(source, spritePath) {
     progress.setSource(source);
     progress.visible = false;
     progress.x = OPTIONS.progressBar.padding;
-    //progress.x = progress.regX;
-    console.log(spriteWidth);
     
     this._source = source;
     source.graphics = this;
@@ -174,7 +172,7 @@ function StudentContainer(stage) {
     this.addStudent = function(student) {
       
         //create and place the container:
-        var character = new Character(student, "img/opiskelija.png");
+        var character = new Character(student, "img/" + student.sprite);
         var count = this._container.getNumChildren();
         
         var spriteWidth = character.getTransformedBounds().width;

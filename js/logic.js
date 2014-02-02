@@ -23,12 +23,17 @@
  */
 function TiedeLogic () {
     
-    this._resources = new Resources(100, 0, 0);
-    this._resourceIncome = new Resources(0, 0, 0);
-    this._staff = [new Unit(0,0,0)];
-    this._students = [];
-    //this._faculties = ["Luonnontieteellinen", "Humanistinen", "Yhteiskuntatietellinen"];
+    this._gold = 100;
+    this._research = 0;
+    this._graduates = 0;
     this._eventListeners = [];
+    this._people = [];
+    
+    this.resources = {
+        gold : 100,
+        graduates : 0,
+        research : 0
+    };
     
     this.getStaffCount = function() {
         return this._staff.length;  
@@ -39,11 +44,11 @@ function TiedeLogic () {
     };
     
     this.getResource = function(resource) {
-        return this._resources[resource];
+        return this.resources[resource]; 
     };
     
-    this.getIncome = function(resource) {
-        return this._resourceIncome[resource];
+    this.addResource = function(resource, amount) {
+        this.resources[resource] += amount;
     };
     
     this.addEventListener = function(event, listener) {
@@ -56,71 +61,51 @@ function TiedeLogic () {
             if(this._eventListeners[i].e == event) this._eventListeners[i].listener(params);
         }
     };
-    
-    
-    this.addStudent = function(student) {
-        this._emit("newStudent", student);
         
-        this._students.push(student);
-    };
-        
-    /** 
-     * Counts the upkeep of all staff within the
-     * university. 
-     */
-    this._countUpkeep = function() {
-        var upkeep = new Resources();
-        for (var i = 0; i < this._staff.length; i++) {
-            upkeep = upkeep.add(this._staff[i].getUpkeep());
-        }
-        return upkeep;
-    };
-    
-    
-    /**
-     * Counts the income for different resources for the 
-     * whole university. 
-     */
-    this._countIncome = function() {
-        var income = new Resources();
-        for (var i = 0; i < this._staff.length; i++) {
-            income = income.add(this._staff[i].getIncome());
-        }
-        return income;
-    };
-    
-    
-    /**
-     * Progresses studies for all studens in the
-     * university. 
-     */
-    this._progressStudies = function(deltaTime) {
-        for (var i = 0; i < this._students.length; i++) {
-            var student = this._students[i];
-            student.study(deltaTime);
-            
-            if(student.canGraduate()) {
-                this._students.splice(i, 1);
-                this._emit("graduated", student);
-            }     
-        }  
-    };
     
     
     /**
      * Progresses the university logic state one tick
      * forward. Income and study progress is updated.
      */
-    this.update = function(deltaTime) {
-        var upkeep = this._countUpkeep(deltaTime);
-        var income = this._countIncome(deltaTime);
+    this.update = function(deltaTime) {        
+        var upkeep = 0;
         
-        this._resourceIncome = income.subtract(upkeep);
-        this._resources = this._resources.add(this._resourceIncome);
+        for (var i = 0; i < this._people.length; i++) {
+            var elem = this._people[i];
+            elem.update(deltaTime);
+            upkeep += elem.getUpkeep();
+            
+            if(elem.isDone()) {
+                var yield = elem.yield();
+                this.addResource(yield.type, yield.amount);
+                
+                if( !elem.isContinuous() ) {
+                    this._people.splice(i, 1);
+                    this._emit("removed", elem);
+                }
+                else {
+                    elem.restart();
+                }
+            }     
+        }
         
-        this._progressStudies(deltaTime);
+        this.addResource("gold", -(upkeep * deltaTime));
     };
     
+          
+    this.addStudent = function(student) {
+        this._emit("newPerson", student);
+        
+        this._people.push(student);
+    };
+    
+    
+    this.addStaff = function(staff) {
+        this._emit("newPerson", staff);
+        
+        this._people.push(staff);  
+    };
 }
 
 window.TiedeLogic = TiedeLogic;

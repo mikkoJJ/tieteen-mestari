@@ -35,8 +35,8 @@ function Game () {
         createjs.Ticker.setFPS(30);
         createjs.Ticker.addEventListener("tick", this.update.bind(this));
         
-        this.logic.addEventListener("graduated", this.removeStudent.bind(this));
-        this.logic.addEventListener("newStudent", this.drawStudent.bind(this));
+        this.logic.addEventListener("removed", this.removeStudent.bind(this));
+        this.logic.addEventListener("newPerson", this.drawStudent.bind(this));
         
         this.stage.enableMouseOver();
         
@@ -57,9 +57,9 @@ function Game () {
         this.logic.addStudent(new Student());
         this.logic.addStudent(new Student());
         this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
+        this.logic.addStudent(new Researcher());
+        this.logic.addStudent(new Researcher());
+        this.logic.addStudent(new Researcher());
     };
     
     
@@ -69,15 +69,8 @@ function Game () {
      */
     this.updateValues = function() {
        $("#gold .resource-amount").text(this.logic.getResource("gold").toFixed(0));
-       $("#local .resource-amount").text(this.logic.getResource("local").toFixed(0));
-       $("#inter .resource-amount").text(this.logic.getResource("inter").toFixed(0));
-       
-       $("#gold .resource-income").text("(" + this.logic.getIncome("gold").toFixed(1) + ")");
-       $("#local .resource-income").text("(" + this.logic.getIncome("local").toFixed(1) + ")");
-       $("#inter .resource-income").text("(" + this.logic.getIncome("inter").toFixed(1) + ")");             
-       
-       $("#staff .personnel-amount").text(this.logic.getStaffCount());
-       $("#students .personnel-amount").text(this.logic.getStudentCount());
+       $("#research .resource-amount").text(this.logic.getResource("research").toFixed(0));
+       $("#graduates .resource-amount").text(this.logic.getResource("graduates").toFixed(0));
     };
     
     
