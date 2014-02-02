@@ -112,6 +112,26 @@ body {
     overflow: auto;
 }
 
+.button {
+    font-family: "Hammersmith One";
+    background: #C13434;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    padding: 0.4em;
+    border-bottom: #112617 solid 1px;
+    text-align: center;
+}
+
+.button:hover {
+    background: #C67373;
+}
+
+.button:active {
+    background: #C67373;
+    border-bottom: none;
+    border-top: #112617 solid 1px;
+}
+
 .sidebar-section {
     border-radius: 10px;
     -moz-border-radius: 10px;
@@ -161,11 +181,10 @@ a:hover .sidebar-section {
     width: 65%;
 }
 #gold .resource-name {
-    width: 35%;
+    width: 30%;
 }
 .resource-amount, .personnel-amount {
     width: 30%;
-    /*background: #4E9362;*/
     text-align: center;
 }
 .resource-income {
@@ -178,17 +197,32 @@ a:hover .sidebar-section {
     position: relative;
 }
 #main-canvas {
-    padding:10px;
+    padding: 5px;
+    position:relative;
+    z-index: 10;
 }
 
 
+#time .button {
+    margin: 0.2em 0.5em;
+    padding: 0.2em 0.4em;
+}
+
+
+/**
+ * ========================================================
+ * H I R E   M E N U 
+ * =======================================================
+ **/
+
 #hire-menu {
-    background: #4E9362;
+    background: #A8C4B0;
     position:absolute;
     top:20px;
     left:20px;
-    right:20px;
+    width:19em;
     display:none;
+    z-index:100;
 }
 
 #hire-menu ul {
@@ -202,13 +236,95 @@ a:hover .sidebar-section {
 #hire-menu li {
     display:block;
     width: 5em;
-    float:left;
+    overflow: auto;
+    margin: 1em;
+    text-align: center;
+    background: #DEF7E5;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-bottom: #112617 solid 2px;
+}
+#hire-menu li:hover {
+    width: 15em;    
+}
+
+#hire-menu .hire-icon {
+    float: left;
+    width: 5em;
+    background: #ADD6B9;
+}
+#hire-menu li .details {
+    position: relative;
+    text-align: left;
+    display: none;
+    width:10em;
+    font-size: 80%;
+    margin-top: 2em;
+    margin-left: 0.5em;
+}
+
+#hire-menu li:hover .details {
+    display:block;
+    float: left;
 }
 
 #hire-menu img {
     width: 5em;
 }
 
+#hire-menu .button {
+    display:block;
+    width:7em;
+}
+
+
+/*
+ * ========================================================
+ * T H E   R E P O R T 
+ * =======================================================
+ */
+
+#report-container {
+    display:none;
+    position:absolute;
+    top: 2em;
+    left:0;
+    right:0;  
+    z-index:1000;
+}
+
+#term-report {
+    font-family: "Courier New";
+    width:15em;
+    margin:auto;
+    background: white;
+    padding: 4em 5em;
+    box-shadow: 5px 5px 2px #555;
+}
+
+.term-header {
+    margin-bottom:2em;   
+}
+
+#term-report .resource-name {
+    width:65%;
+}
+.resource-gain {
+    margin-left: 2em;    
+}
+.gain-amount {
+    font-size:110%;
+    font-weight:bold;
+}
+
+#total-gain {
+    margin: 2em 0 ;
+    font-size:110%;
+}
+
+#term-report .button {
+    float:right;
+}
 
 
 /* ==========================================================================

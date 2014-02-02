@@ -94,7 +94,7 @@ Unit.prototype.initialize = function() {
     this._yieldType = "undefined";
     this._yieldAmount = 1;
     this._continuous = true;
-    this._morale = Math.random() * (1.0 - 0.1) + 0.1;
+    this._morale = Math.random() * (1.0 - 0.4) + 0.4;
 };
 
 /**
@@ -110,6 +110,10 @@ Unit.prototype.getUpkeep = function() {
  */
 Unit.prototype.getProgress = function() {
     return this._progress;
+};
+
+Unit.prototype.boostMorale = function(amount) {
+    this._morale *= amount;
 };
 
 /**
@@ -156,11 +160,15 @@ Unit.prototype.isStudent = function() {
     return this._yieldType == "graduates";
 };
 
+Unit.prototype.onAdd = function(logic) { };
+
 //============================================================================================= STUDENT
 
 var Student = function() {
     this.initialize();
     
+    this._baseUpkeep = 0.1;
+    this._baseProgress = 1 / 60 / 4;
     this._yieldType = "graduates";
     this._continuous = false;
     this.sprite = "opiskelija.png";
@@ -169,14 +177,39 @@ var Student = function() {
 Student.prototype = new Unit();
 
 
-//============================================================================================= STAFF
+//============================================================================================= RESEARCHER
 
 var Researcher = function() {
     this.initialize();
     
-    this._baseUpkeep = 1;
+    this._baseUpkeep = 3;
     this._yieldType = "research";
     this.sprite = "tutkija.png";
 };
 
 Researcher.prototype = new Unit();
+
+
+//============================================================================================= TEACHER
+
+var Teacher = function() {
+    this.initialize();
+    
+    this._baseUpkeep = 1;
+    this._baseProgress = 0;
+    this._yieldType = "research";
+    this.sprite = "opettaja.png";
+};
+
+Teacher.prototype = new Unit();
+
+Teacher.prototype.onAdd = function(logic) {
+    var units = logic.getUnits();
+    for(var i=0; i<units.length; i++) {
+        var unit = units[i];
+        if(unit.isStudent() && !unit.teacher) {
+            unit.teacher = this;
+            unit.boostMorale(2);
+        }
+    }  
+};

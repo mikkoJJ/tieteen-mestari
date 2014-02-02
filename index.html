@@ -38,7 +38,8 @@
             <div id="sidebar">
                 
                 <div id="time" class="sidebar-section time-section">
-                    <span class="personnel-name">Lukukausi:</span><span class="personnel-amount" id="year">0</span>
+                    Nopeus:
+                    <a id="speed-up" class="button" href="javascript:void(0);">+</a><span id="time-scale">0</span><a id="speed-down" class="button" href="javascript:void(0);">-</a>
                 </div>
                 
                 <div id="resources" class="sidebar-section resource-section">
@@ -64,15 +65,64 @@
                 </div>-->
                 <a id="hire-menu-link" href="javascript:void(0);">
                 <div id="hire" class="sidebar-section active-section">
-                    Palkkaa
+                    Palkkaa <span style="float:right">>></span>
                 </div></a>  
+                
+                
             </div><!-- sidebar end -->
+            
+            <div id="report-container">
+                <div id="term-report">
+                    <div class="term-header">
+                        Lukukausi <span id="term-number">0</span> <br />
+                        R A P O R T T I <br />
+                        ===============
+                    </div>
+                    <div id="report-research" class="resource">
+                        <span class="resource-name">Tutkimus: </span><span class="resource-amount">0</span> <!--<span class="resource-income">0</span>-->
+                    </div>
+                    <div id="research-gain" class="resource-gain">
+                        ===> <span class="gain-amount">+0</span> kultaa
+                    </div>
+                    <div id="report-graduates" class="resource">
+                        <span class="resource-name">Valmistuneita: </span><span class="resource-amount">0</span> <!--<span class="resource-income">0</span>-->
+                    </div>
+                    <div id="graduates-gain" class="resource-gain">
+                        ===> <span class="gain-amount">+0</span> kultaa
+                    </div>
+                    <div id="total-gain">
+                        YHTEENSÄ: <span class="gain-amount">+0</span> kultaa 
+                    </div>
+                    <a id="report-close" class="button" href="javascript:void(0);">Selvä</a>
+                </div>
+            </div>
             
             
             <div id="canvas-container">
                 <div id="hire-menu">
                     <ul>
-                        <li><a id="researcher" class="hire-person" href="javascript:void(0)"><img src="img/tutkija.png" /></a></li>
+                        <li>
+                            <div class="hire-icon">
+                                <img src="img/tutkija.png" />
+                                <span class="hire-name">Tutkija</span>
+                            </div>
+                            <div class="details">
+                                Palkka: 3 kultaa/s <br />
+                                Tuottaa <i>tutkimusta</i><br />
+                                <a id="hire-researcher" class="button" href="javascript:void(0)">Palkkaa</a>    
+                            </div>
+                        </li>
+                        <li>
+                            <div class="hire-icon">
+                                <img src="img/opettaja.png" />
+                                <span class="hire-name">Opettaja</span>
+                            </div>
+                            <div class="details">
+                                Palkka: 1 kulta/s <br />
+                                Auttaa 5 opiskelijaa valmistumaan<br />
+                                <a id="hire-teacher" class="button" href="javascript:void(0)">Palkkaa</a>    
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <canvas id="main-canvas" width="800" height="600">Selaimesi ei tue tarvittavia HTML5-ominaisuuksia tämän pelin pelaamiseen.</canvas>

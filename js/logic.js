@@ -11,15 +11,27 @@
  * the "interface" between the HTML UI and the game logic.
  *======================================================================*/
 (function (window, $) {
+
+var OPTIONS = {
+    //at the end of term, how many gold does each resource yield
+    resourceRate: {
+        graduates: 60,
+        research: 50
+    },
     
+    baseStudentGrowth: 2,
+    
+    startingGold: 300
+};
+ 
 /**
  * The object that keeps track of the game state, such as
  * resources and units. 
  * 
  * Exposes the following events for controllers to bind to:
- *  - newStudent
- *  - newStaff
- *  - graduated
+ *  - newPerson
+ *  - removed
+ *  - newTerm
  */
 function TiedeLogic () {
     
@@ -28,19 +40,21 @@ function TiedeLogic () {
     this.paused = false;
     this._currentUpkeep = 0;
     
+    //length of one term in seconds:
+    this.termLength = 60;
+    this.termNumber = 1;
+    this._termProgress = 0.0;
+    
     this.resources = {
-        gold : 100,
+        gold : OPTIONS.startingGold,
         graduates : 0,
         research : 0
     };
     
-    this.getStaffCount = function() {
-        return this._staff.length;  
+    this.addEventListener = function(event, listener) {
+        this._eventListeners.push({ e: event, listener: listener });
     };
     
-    this.getStudentCount = function() {
-        return this._students.length;
-    };
     
     this.getResource = function(resource) {
         return this.resources[resource]; 
@@ -54,6 +68,19 @@ function TiedeLogic () {
         this.resources[resource] += amount;
     };
     
+    this.resourceToGold = function(resource) {
+        return this.resources[resource] * OPTIONS.resourceRate[resource];
+    };
+    
+    this.resetResources = function() {
+        this.resources["research"] = 0;
+        this.resources["graduates"] = 0;  
+    };
+    
+    this.getProgress = function() {
+        return this._termProgress / this.termLength;  
+    };
+    
     this.pause = function() {
         this.paused = true;
     };
@@ -61,8 +88,25 @@ function TiedeLogic () {
         this.paused = false;  
     };
     
-    this.addEventListener = function(event, listener) {
-        this._eventListeners.push({ e: event, listener: listener });
+    this.getUnits = function() {
+        return this._people;
+    };
+    
+    /**
+     * Performs logic tasks related to the new term coming. 
+     */
+    this.newTerm = function() {
+        var gain = 0;
+        gain += this.resourceToGold("research");
+        gain += this.resourceToGold("graduates");
+        
+        this.addResource("gold", gain);
+        
+        var studentGrowth = OPTIONS.baseStudentGrowth + this.getResource("graduates") / 10;
+        for(var i=0; i<studentGrowth; i++) this.addUnit(new Student());
+        
+        this.termNumber++;
+        this.resetResources();
     };
     
     /** Emits a given event. Listener callbacks are called. */
@@ -102,8 +146,18 @@ function TiedeLogic () {
         
         this._currentUpkeep = -upkeep;
         this.addResource("gold", -(upkeep * deltaTime));
+        
+        this._termProgress += deltaTime;
+        if(this._termProgress >= this.termLength) {
+            this._emit("newTerm");
+            this._termProgress = 0.0;
+        } 
     };
     
+    this.addUnit = function(unit) {
+        this._emit("newPerson", unit);
+        this._people.push(unit);
+    };
           
     this.addStudent = function(student) {
         this._emit("newPerson", student);

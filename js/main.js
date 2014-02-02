@@ -18,6 +18,7 @@
  */
 function Game () {
     
+    var timeScale = 5;
     var valueFields = {};
     
     this._lastTime = 0;
@@ -37,6 +38,7 @@ function Game () {
         
         this.logic.addEventListener("removed", this.removeStudent.bind(this));
         this.logic.addEventListener("newPerson", this.drawStudent.bind(this));
+        this.logic.addEventListener("newTerm", this.showTermReport.bind(this));
         
         this.stage.enableMouseOver();
         this.setupUI();
@@ -45,30 +47,50 @@ function Game () {
         this.logic.addStudent(new Student());
         this.logic.addStudent(new Student());
         this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Student());
-        this.logic.addStudent(new Researcher());
-        this.logic.addStudent(new Researcher());
-        this.logic.addStudent(new Researcher());
+        
+        var termProgress = new ProgressBar(400, 40);
+        termProgress.setSource(this.logic);
+        termProgress.x = termProgress.y = 20;
+        this.stage.addChild(termProgress);
     };
     
+    /**
+     * Sets up the UI. This takes care of binding the different UI
+     * elements within the HTML page to the code here using jQuery
+     * event bindings. 
+     */
     this.setupUI = function() {
         $("#hire-menu-link").click(function(e) {
            e.preventDefault(); 
            $("#hire-menu").toggle();
         });
         
+        
+        $("#hire-researcher").click(function(e) {
+            e.preventDefault();
+            TiedeGame.logic.addUnit(new Researcher());
+            $("#hire-menu").toggle();
+        });
+        $("#hire-teacher").click(function(e) {
+            e.preventDefault();
+            TiedeGame.logic.addUnit(new Teacher());
+            $("#hire-menu").toggle();
+        });
+        
+        
+        $("#report-close").click(function(e) {
+            e.preventDefault();
+            TiedeGame.logic.newTerm();
+            TiedeGame.logic.unpause();
+            $("#report-container").toggle();
+        });
+        
+        $("#speed-up").click(function(e) {
+           timeScale++; 
+        });
+        $("#speed-down").click(function(e) {
+           timeScale--; 
+        });
         
     };
     
@@ -81,8 +103,29 @@ function Game () {
        $("#gold .resource-income").text("(" + this.logic.getCurrentUpkeep().toFixed(1) + "/s)");
        $("#research .resource-amount").text(this.logic.getResource("research").toFixed(0));
        $("#graduates .resource-amount").text(this.logic.getResource("graduates").toFixed(0));
+       
+       $("#time-scale").text(timeScale);
     };
     
+    /**
+     * Shows a report at the end of term. 
+     */
+    this.showTermReport = function() {
+        this.logic.pause();
+        
+        $("#term-number").text(this.logic.termNumber);
+        $("#report-research .resource-amount").text(this.logic.getResource("research").toFixed(0));
+        $("#report-graduates .resource-amount").text(this.logic.getResource("graduates").toFixed(0));
+        
+        var researchGain = this.logic.resourceToGold("research");
+        var graduatesGain = this.logic.resourceToGold("graduates"); 
+        
+        $("#research-gain .gain-amount").text("+" + researchGain.toFixed(0));
+        $("#graduates-gain .gain-amount").text("+" + graduatesGain.toFixed(0));
+        $("#total-gain .gain-amount").text("+" + (researchGain + graduatesGain).toFixed(0));
+        
+        $("#report-container").toggle();
+    };
     
     this.drawStudent = function(student) {
         this.students.addStudent(student);        
@@ -101,7 +144,7 @@ function Game () {
         var deltaTime = (time - this._lastTime) / 1000;
         this._lastTime = time;
         
-        this.logic.update(deltaTime);
+        this.logic.update(deltaTime * timeScale);
         this.updateValues();
         this.stage.update();
     };

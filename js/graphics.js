@@ -24,6 +24,7 @@ var OPTIONS = {
     },
     studentContainer: {
         width: 400,
+        height: 200,
         margin: -10,
     },  
 };
@@ -48,21 +49,26 @@ var ProgressBar = function(width) {
 ProgressBar.prototype = new createjs.Container();
 
 ProgressBar.prototype.Container_initialize = ProgressBar.prototype.initialize;
-ProgressBar.prototype.initialize = function(width) {
+ProgressBar.prototype.initialize = function(width, height) {
     this.Container_initialize();
+    
+    this.height = height ? height : OPTIONS.progressBar.height;
+    
+    this.color = OPTIONS.progressBar.color;
+    this.background = OPTIONS.progressBar.background;
         
     var bar = new createjs.Shape();
     var bg = new createjs.Shape();
     
-    this.setBounds(0, 0, width, OPTIONS.progressBar.height);
-    bar.setBounds(0, 0, width, OPTIONS.progressBar.height);
+    this.setBounds(0, 0, width, this.height);
+    bar.setBounds(0, 0, width, this.height);
     bar.name = "progress";
     
     bg.graphics.beginFill(OPTIONS.progressBar.background).drawRoundRect(
             0,
             0, 
             Math.floor(width), 
-            OPTIONS.progressBar.height, 
+            this.height, 
             8, 8, 8, 8);
     
     this.mouseEnabled = false;
@@ -87,7 +93,7 @@ ProgressBar.prototype._ticky = function(e) {
         0, 
         0, 
         Math.floor(bounds.width * source.getProgress()), 
-        OPTIONS.progressBar.height, 
+        this.height, 
         8, 8, 8, 8);
 };
 
@@ -167,6 +173,9 @@ function StudentContainer(stage) {
     this._container = new createjs.Container();
     this._container.name = "classroom";
     
+    this.nextPosition = {x: 20, y: 50};
+    this.fill = [];
+    
     stage.addChild(this._container);
         
     this.addStudent = function(student) {
@@ -177,22 +186,38 @@ function StudentContainer(stage) {
         
         var spriteWidth = character.getTransformedBounds().width;
         var spriteHeight = character.getTransformedBounds().height;
-        var spriteMargin = OPTIONS.studentContainer.margin;
-        var perRow =  Math.floor(OPTIONS.studentContainer.width / (spriteWidth + spriteMargin));
+        character.x = this.nextPosition.x;
+        character.y = this.nextPosition.y;
         
-        var row = Math.floor(count / perRow);
-        character.y = row * (spriteHeight + spriteMargin);
-        character.x = Math.floor(count % perRow) * (spriteWidth + spriteMargin);
+        if(this.fill.length > 0) {
+            character.x = this.fill[0].x;
+            character.y = this.fill[0].y;
+            this.fill.splice(0,1);
+        }
+        else {
+            character.x = this.nextPosition.x;
+            character.y = this.nextPosition.y;
+            this.nextPosition.x += OPTIONS.studentSprite.width * OPTIONS.studentSprite.scale;
+            if(this.nextPosition.x > OPTIONS.studentContainer.width) {
+                this.nextPosition.x = 20;
+                this.nextPosition.y += OPTIONS.studentSprite.height * OPTIONS.studentSprite.scale;    
+            }
+        }
         
         this._container.addChild(character);
     };
     
     this.removeStudent = function(student) {
-        this._container.removeChild(student.graphics);
+        var character = student.graphics;
+        
+        this.fill.push({x: character.x, y: character.y});
+        
+        this._container.removeChild(character);
     };
     
 }
 
 window.StudentContainer = StudentContainer;
+window.ProgressBar = ProgressBar;
 
 }(window));
