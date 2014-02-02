@@ -39,6 +39,7 @@ function Game () {
         this.logic.addEventListener("newPerson", this.drawStudent.bind(this));
         
         this.stage.enableMouseOver();
+        this.setupUI();
         
         this.logic.addStudent(new Student());
         this.logic.addStudent(new Student());
@@ -62,6 +63,14 @@ function Game () {
         this.logic.addStudent(new Researcher());
     };
     
+    this.setupUI = function() {
+        $("#hire-menu-link").click(function(e) {
+           e.preventDefault(); 
+           $("#hire-menu").toggle();
+        });
+        
+        
+    };
     
     /**
      * Updates the UI according to the state of the Logic, ie. changes values
@@ -69,6 +78,7 @@ function Game () {
      */
     this.updateValues = function() {
        $("#gold .resource-amount").text(this.logic.getResource("gold").toFixed(0));
+       $("#gold .resource-income").text("(" + this.logic.getCurrentUpkeep().toFixed(1) + "/s)");
        $("#research .resource-amount").text(this.logic.getResource("research").toFixed(0));
        $("#graduates .resource-amount").text(this.logic.getResource("graduates").toFixed(0));
     };

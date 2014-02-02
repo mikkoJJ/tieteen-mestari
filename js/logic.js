@@ -23,11 +23,10 @@
  */
 function TiedeLogic () {
     
-    this._gold = 100;
-    this._research = 0;
-    this._graduates = 0;
     this._eventListeners = [];
     this._people = [];
+    this.paused = false;
+    this._currentUpkeep = 0;
     
     this.resources = {
         gold : 100,
@@ -47,8 +46,19 @@ function TiedeLogic () {
         return this.resources[resource]; 
     };
     
+    this.getCurrentUpkeep = function() {
+        return this._currentUpkeep;    
+    };
+    
     this.addResource = function(resource, amount) {
         this.resources[resource] += amount;
+    };
+    
+    this.pause = function() {
+        this.paused = true;
+    };
+    this.unpause = function() {
+        this.paused = false;  
     };
     
     this.addEventListener = function(event, listener) {
@@ -60,15 +70,15 @@ function TiedeLogic () {
         for(var i=0; i<this._eventListeners.length; i++) {
             if(this._eventListeners[i].e == event) this._eventListeners[i].listener(params);
         }
-    };
-        
-    
+    };    
     
     /**
      * Progresses the university logic state one tick
      * forward. Income and study progress is updated.
      */
     this.update = function(deltaTime) {        
+        if(this.paused) return;
+        
         var upkeep = 0;
         
         for (var i = 0; i < this._people.length; i++) {
@@ -90,6 +100,7 @@ function TiedeLogic () {
             }     
         }
         
+        this._currentUpkeep = -upkeep;
         this.addResource("gold", -(upkeep * deltaTime));
     };
     

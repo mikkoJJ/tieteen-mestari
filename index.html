@@ -43,7 +43,7 @@
                 
                 <div id="resources" class="sidebar-section resource-section">
                     <div id="gold" class="resource">
-                        <span class="resource-name">Kulta: </span><span class="resource-amount">0</span> <!--<span class="resource-income">0</span>-->
+                        <span class="resource-name">Kulta: </span><span class="resource-amount">0</span> <span class="resource-income">0</span>
                     </div>
                     <div id="research" class="resource">
                         <span class="resource-name">Tutkimus: </span><span class="resource-amount">0</span> <!--<span class="resource-income">0</span>-->
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 
-                <div id="personnel" class="sidebar-section resource-section">
+                <!--<div id="personnel" class="sidebar-section resource-section">
                     <div id="staff">
                         <span class="personnel-name">Henkilökuntaa: </span><span class="personnel-amount">0</span>
                     </div>
@@ -61,14 +61,21 @@
                         <span class="personnel-name">Opiskelijoita: </span><span class="personnel-amount">0</span>
                     </div>
                 
-                </div>
+                </div>-->
+                <a id="hire-menu-link" href="javascript:void(0);">
+                <div id="hire" class="sidebar-section active-section">
+                    Palkkaa
+                </div></a>  
             </div><!-- sidebar end -->
             
             
-            
-            
             <div id="canvas-container">
-                <canvas id="main-canvas" width="800" height="600">Your browser does not support the HTML5 canvas.</canvas>
+                <div id="hire-menu">
+                    <ul>
+                        <li><a id="researcher" class="hire-person" href="javascript:void(0)"><img src="img/tutkija.png" /></a></li>
+                    </ul>
+                </div>
+                <canvas id="main-canvas" width="800" height="600">Selaimesi ei tue tarvittavia HTML5-ominaisuuksia tämän pelin pelaamiseen.</canvas>
             </div>
         </div>
         

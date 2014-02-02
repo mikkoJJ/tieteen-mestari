@@ -179,8 +179,4 @@ var Researcher = function() {
     this.sprite = "tutkija.png";
 };
 
-Staff.prototype = new Unit();
-
-Staff.prototype.beginResearch = function() {
-    this._progress = 0;  
-};
+Researcher.prototype = new Unit();
