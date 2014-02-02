@@ -12,26 +12,6 @@
  *======================================================================*/
 (function (window, $) {
 
-var OPTIONS = {
-    progressBar: {
-        color: "#5FDD7F",
-        background: "#243529",
-        height: 10,
-        padding: 20,
-        margin: -10
-    },
-    studentSprite: {
-        scale: 0.8,
-        width: 120,
-        height: 150,
-    },
-    studentContainer: {
-        width: 400,
-        margin: -10,
-    },  
-};
-
-
 /**
  * Contains the interface between the HTML page (and the player) and the game logic.
  * Handles initialization of game objects and state, along with UI features.
@@ -49,6 +29,7 @@ function Game () {
     this.start = function(canvasID) {
         this.stage = new createjs.Stage(canvasID);
         this.logic = new TiedeLogic();
+        this.students = new StudentContainer(this.stage);
         
         createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
         createjs.Ticker.setFPS(30);
@@ -101,88 +82,11 @@ function Game () {
     
     
     this.drawStudent = function(student) {
-        
-        //create the student sprite:
-        var sprite = new createjs.Bitmap("img/opiskelija.png");
-        sprite.name = "sprite";
-        
-        sprite.scaleX = OPTIONS.studentSprite.scale;
-        sprite.scaleY = OPTIONS.studentSprite.scale;
-        
-        
-        //calculate useful values:
-        var spriteWidth = sprite.getTransformedBounds().width;
-        var spriteHeight = sprite.getTransformedBounds().height;
-        var spriteMargin = OPTIONS.studentContainer.margin;
-        var perRow =  Math.floor(OPTIONS.studentContainer.width / (spriteWidth + spriteMargin));
-        
-        sprite.regX = spriteWidth / 2;
-        sprite.regY = spriteHeight / 2;
-        sprite.x = sprite.regX;
-        sprite.y = sprite.regY + OPTIONS.progressBar.height + OPTIONS.progressBar.margin;
-        
-        //create and place the container:
-        var container = new createjs.Container();
-        var studentCount = this.logic.getStudentCount();
-        
-        var row = Math.floor(studentCount / perRow);
-        container.y = row * (spriteHeight + spriteMargin);
-        container.x = Math.floor(studentCount % perRow) * (spriteWidth + spriteMargin);
-        
-        
-        //bind events:
-        container.addEventListener("mouseover", (function(e){
-            //make sprite more visible:
-            e.target.scaleX = OPTIONS.studentSprite.scale * 1.1;
-            e.target.scaleY = OPTIONS.studentSprite.scale * 1.1;
-            //make progressbar visible:
-            e.currentTarget.getChildAt(1).alpha = 1;
-            e.currentTarget.getChildAt(2).alpha = 1;
-        }).bind(this));
-        
-        container.addEventListener("mouseout", (function(e){
-            //undo mouseover actions:
-            e.target.scaleX = OPTIONS.studentSprite.scale;
-            e.target.scaleY = OPTIONS.studentSprite.scale;;
-            //make progressbar invisible:
-            e.currentTarget.getChildAt(1).alpha = 0;
-            e.currentTarget.getChildAt(2).alpha = 0;
-        }).bind(this));
-        
-        
-        //create the progressbar:
-        var progress = new createjs.Shape();
-        progress.setBounds(0, 0, spriteWidth, OPTIONS.progressBar.height);
-        progress.name = "progress";
-        progress.student = student;
-        progress.alpha = 0; 
-        progress.mouseEnabled = false;
-        
-        progress.addEventListener("tick", function(e) {
-            var bar = e.currentTarget;
-            var student = bar.student;
-            var bounds = bar.getBounds();
-            
-            bar.graphics.beginFill(OPTIONS.progressBar.color).drawRoundRect(
-                OPTIONS.progressBar.padding, 0, 10 + Math.floor((bounds.width - OPTIONS.progressBar.padding * 2) * student.getProgress()), OPTIONS.progressBar.height, 5, 5, 5, 5);
-        });
-        
-        //make the background for the progressbar
-        var blackbar = new createjs.Shape();
-        blackbar.graphics.beginFill(OPTIONS.progressBar.background).drawRoundRect(
-                OPTIONS.progressBar.padding, 0, 10 + Math.floor((spriteWidth - OPTIONS.progressBar.padding * 2)), OPTIONS.progressBar.height, 5, 5, 5, 5);
-        blackbar.alpha = 0;
-        blackbar.mouseEnabled = false;
-        
-        
-        student.graphics = container;
-        
-        container.addChild(sprite, blackbar, progress);
-        this.stage.addChild(container);
+        this.students.addStudent(student);        
     };
     
     this.removeStudent = function(student) {
-        this.stage.removeChild(student.graphics); 
+        this.students.removeStudent(student); 
     };
     
     

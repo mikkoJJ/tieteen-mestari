@@ -1,7 +1,7 @@
 just calculating
 
 === VKO 1: 
-suunnittelu 2
+suunnittelu 3
 grafiikka 1
 koodaus 10
 
