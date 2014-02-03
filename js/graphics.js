@@ -107,10 +107,10 @@ ProgressBar.prototype._ticky = function(e) {
  * @class Character
  * @extends createjs.Container 
  * @param {Object} source the game logic source of this character.
- * @param {String} spritePath the path to the sprite image of this character
+ * @param {Image} spritePath the path to the sprite image of this character
  */
-var Character = function(source, spritePath) {
-    this.initialize(source, spritePath);
+var Character = function(source, sprite) {
+    this.initialize(source, sprite);
 };
     
 Character.prototype = new createjs.Container();
@@ -169,9 +169,10 @@ Character.prototype.getTransformedBounds = function() {
 
 //======================================================================================== STUDENTCONTAINER
     
-function StudentContainer(stage) {
+function StudentContainer(stage, assets) {
     this._container = new createjs.Container();
     this._container.name = "classroom";
+    this._assets = assets;
     
     this.nextPosition = {x: 20, y: 50};
     this.fill = [];
@@ -181,7 +182,7 @@ function StudentContainer(stage) {
     this.addStudent = function(student) {
       
         //create and place the container:
-        var character = new Character(student, "img/" + student.sprite);
+        var character = new Character(student, this._assets.getResult(student.sprite));
         var count = this._container.getNumChildren();
         
         var spriteWidth = character.getTransformedBounds().width;

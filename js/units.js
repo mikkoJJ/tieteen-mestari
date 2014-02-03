@@ -171,7 +171,7 @@ var Student = function() {
     this._baseProgress = 1 / 60 / 4;
     this._yieldType = "graduates";
     this._continuous = false;
-    this.sprite = "opiskelija.png";
+    this.sprite = "student";
 };
 
 Student.prototype = new Unit();
@@ -184,7 +184,7 @@ var Researcher = function() {
     
     this._baseUpkeep = 3;
     this._yieldType = "research";
-    this.sprite = "tutkija.png";
+    this.sprite = "researcher";
 };
 
 Researcher.prototype = new Unit();
@@ -198,7 +198,7 @@ var Teacher = function() {
     this._baseUpkeep = 1;
     this._baseProgress = 0;
     this._yieldType = "research";
-    this.sprite = "opettaja.png";
+    this.sprite = "teacher";
 };
 
 Teacher.prototype = new Unit();

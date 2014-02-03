@@ -18,19 +18,18 @@
  */
 function Game () {
     
-    var timeScale = 5;
+    var timeScale = 1;
     var valueFields = {};
     
     this._lastTime = 0;
     
     /**
      * Sets up the game UI with EaselJS 
-     * @param {String} canvasID the ID name of the canvas on the page to use
+     * @param {String} canvasID the ID name of the canvas we're using to draw stuff.
      */
     this.start = function(canvasID) {
         this.stage = new createjs.Stage(canvasID);
         this.logic = new TiedeLogic();
-        this.students = new StudentContainer(this.stage);
         
         createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
         createjs.Ticker.setFPS(30);
@@ -43,6 +42,23 @@ function Game () {
         this.stage.enableMouseOver();
         this.setupUI();
         
+        //preload:
+        var loader = new createjs.LoadQueue(true);
+        loader.on("complete", this.loaded, this);
+        loader.loadManifest([
+           { id: "student", src: "img/opiskelija.png" },
+           { id: "researcher", src: "img/tutkija.png" },
+           { id: "teacher", src: "img/opettaja.png" } 
+        ]);
+        
+        this.assets = loader;
+        this.students = new StudentContainer(this.stage, this.assets);
+    };
+    
+    /**
+     * Called when content has finished preloading. 
+     */
+    this.loaded = function() {
         this.logic.addStudent(new Student());
         this.logic.addStudent(new Student());
         this.logic.addStudent(new Student());
